@@ -1,17 +1,19 @@
 import urllib2
 from HTMLParser import HTMLParser
 
-class MyHTMLParser(HTMLParser):
+class LinkParser(HTMLParser):
+    links = list()
     def handle_starttag(self, tag, attrs):
         if tag == 'a':
             for attr in attrs:
                 if attr[0] == 'href':
-                    print attr[1]
+                    self.links.append(attr[1])
                 
+def get_links(url):
+    page = urllib2.urlopen(url)
+    content = page.read()
+    parser = LinkParser()
+    parser.feed(content)
+    return parser.links
 
-link = 'http://www.gogo.mn'
-page = urllib2.urlopen(link)
-content = page.read()
-parser = MyHTMLParser()
-parser.feed(content)
-
+#print get_links('http://www.gogo.mn')
